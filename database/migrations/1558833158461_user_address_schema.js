@@ -3,9 +3,9 @@
 /** @type {import('@adonisjs/lucid/src/Schema')} */
 const Schema = use('Schema')
 
-class ProjectSchema extends Schema {
+class UserAddressSchema extends Schema {
   up () {
-    this.create('projects', (table) => {
+    this.create('user_addresses', table => {
       table.increments()
       table
         .integer('user_id')
@@ -14,15 +14,18 @@ class ProjectSchema extends Schema {
         .inTable('users')
         .onUpdate('CASCADE')
         .onDelete('SET NULL')
-      table.string('title').notNullable()
-      table.string('description').notNullable()
+      table.string('street').notNullable()
+      table.integer('number').notNullable()
+      table.string('district')
+      table.string('city').notNullable()
+      table.string('state').notNullable()
       table.timestamps()
     })
   }
 
   down () {
-    this.drop('projects')
+    this.drop('user_addresses')
   }
 }
 
-module.exports = ProjectSchema
+module.exports = UserAddressSchema

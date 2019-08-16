@@ -9,24 +9,30 @@ class ForgotPasswordController {
   async store ({ request, response }) {
     try {
       const email = request.input('email')
-
       const user = await User.findByOrFail('email', email)
 
       user.token = crypto.randomBytes(10).toString('hex')
       user.token_created_at = new Date()
-
       await user.save()
 
-      await Mail.send(['emails.forgot_password'], {
-        email,
-        token: user.token,
-        link: `${request.input('redirect_url')}?token=${user.token}`
-      }, message =>
-        message.to(user.email)
-          .from('admin@mau.com', 'Admin - GoNode')
-          .subject('Recuperação de Senha'))
+      await Mail.send(
+        ['emails.forgot_password'],
+        {
+          email,
+          token: user.token,
+          link: `${request.input('redirect_url')}?token=${user.token}`
+        },
+        message => {
+          message
+            .to(user.email)
+            .from('thomaslossio@hotmail.com', 'Thomas Lossio')
+            .subject('Recuperação de senha')
+        }
+      )
     } catch (err) {
-      return response.status(err.status).send({ error: { message: 'Algo nao deu certo, esse email existe?' } })
+      return response
+        .status(err.status)
+        .send({ error: { message: 'Algo não deu certo, esse e-mail existe?' } })
     }
   }
 
@@ -43,18 +49,18 @@ class ForgotPasswordController {
       if (tokenExpired) {
         return response
           .status(401)
-          .send({ error: { message: 'Token de recuperacao expirado' } })
+          .send({ error: { message: 'O token de recuperação está expirado' } })
       }
 
       user.token = null
       user.token_created_at = null
       user.password = password
+
       await user.save()
     } catch (err) {
-      console.log(err.message)
       return response
         .status(err.status)
-        .send({ error: { message: 'Algo deu errado ao resetar sua senha.' } })
+        .send({ error: { message: 'Algo deu errado ao resetar sua senha' } })
     }
   }
 }

@@ -5,7 +5,7 @@ const Schema = use('Schema')
 
 class TaskSchema extends Schema {
   up () {
-    this.create('tasks', (table) => {
+    this.create('tasks', table => {
       table.increments()
       table
         .integer('project_id')
@@ -30,7 +30,7 @@ class TaskSchema extends Schema {
         .onUpdate('CASCADE')
         .onDelete('SET NULL')
       table.string('title').notNullable()
-      table.string('description')
+      table.text('description')
       table.timestamp('due_date')
       table.timestamps()
     })

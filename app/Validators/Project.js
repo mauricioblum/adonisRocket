@@ -9,7 +9,6 @@ class Project {
 
   get rules () {
     return {
-      // validation rules
       title: 'required',
       description: 'required'
     }

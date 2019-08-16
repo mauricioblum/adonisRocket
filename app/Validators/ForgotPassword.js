@@ -9,7 +9,6 @@ class ForgotPassword {
 
   get rules () {
     return {
-      // validation rules
       email: 'required|email',
       redirect_url: 'required|url'
     }
